@@ -1,0 +1,188 @@
+<%@LANGUAGE="VBSCRIPT" CODEPAGE="65001"%> 
+<!doctype html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title>Nimbus Map</title>
+	<link rel='stylesheet' href='https://fonts.googleapis.com/css?family=Montserrat'>
+	<link rel="stylesheet" href="https://code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css">
+	<link rel="stylesheet" href="nimbus.core.css" />
+	<link rel="stylesheet" href="nimbus.layout.css" />
+	<link rel="stylesheet" href="dolly.css" />
+	<style>
+		body {overflow: none;}
+		#main {
+			width: 1920px; height: 1523px;
+			transform-origin: center;
+			transition: transform 1s;
+		}
+		#main[scale="150"] {transform: scale(1.5);}
+		#main[scale="75"] {transform: scale(.75);}
+		#main[scale="50"] {transform: scale(.5);}
+		#map-view {
+			position: relative; 
+			height: 100%;
+			width: 100%;
+			background-image: url("plano.jpg");
+			background-repeat: no-repeat; 
+			/*background-position: -200px -130px;*/
+			background-attachment: scroll;
+			height: 2000px;
+		}
+		.desktop {
+			position: absolute; 
+			text-align: center; 
+			background-color: #EEE;
+			border: 1px solid #CCC;
+			padding: 0; margin: 0;
+			box-sizing: border-box;
+			/*box-shadow: 
+				2px 0 0 0 #888, 
+				0 2px 0 0 #888, 
+				2px 2px 0 0 #888,   /* Just to fix the corner * /
+				2px 0 0 0 #888 inset, 
+				0 2px 0 0 #888 inset;*/
+		}
+		.desktop[category=Arte] {border-color: #080;}
+		.desktop[category=Estilo] {border-color: #808;}
+		.desktop[category=Hogar-y-Textil] {border-color: #00F;}
+		.desktop[category=Infantiles] {border-color: #C40;}
+		.desktop[category=Provincias] {border-color: #46C;}
+		.desktop[category=Sabores] {border-color: #888;}
+		.desktop[category=Sponsors] {border-color: #C00;}
+		
+		.desktop[category=Arte][reserved] {background-color: #00880050;}
+		.desktop[category=Estilo][reserved] {background-color: #88008850;}
+		.desktop[category=Hogar-y-Textil][reserved] {background-color: #0000FF50;}
+		.desktop[category=Infantiles][reserved] {background-color: #CC440050;}
+		.desktop[category=Provincias][reserved] {background-color: #4466CC50;}
+		.desktop[category=Sabores][reserved] {background-color: #88888850;}
+		.desktop[category=Sponsors][reserved] {background-color: #CC000050;}
+
+		.machine {
+			position: absolute; 
+			left: 50%; top: 50%; 
+			width: 90%;
+			transform: translate(-50%,-50%);
+			font-size: smaller; font-weight: bold;
+			z-index: 1; 
+		}
+		.machine[vertical] {writing-mode: vertical-rl; width: auto; height: 90%;}
+		
+		#commands {
+			position: absolute; top: 40px; left: 40px; width: 240px; height: 50px; background-color: #CCC; box-shadow: 0px 5px 20px 2px #000; border-radius: 5px;
+			padding-left: 20px;
+		}
+		.commands					{height: 50px; /*background-color: #666;*/}
+		.commands .button			{
+			width: 40px; height: 40px; 
+			background-color: #333; 
+			margin: 5px; 
+			transform-origin: center; 
+			display: inline-block; 
+			cursor: pointer; 
+			border-radius: 5px;
+			position: relative;
+		}
+		.commands .button:hover		{transform: scale(1.1,1.1); box-shadow: 0 0 10px #FFF;}
+		.commands .button span		{color: #FFF; position: absolute; left: 50%; top: 50%; transform: translate(-50%,-50%); font-size: smaller;}
+
+		#curtain {
+			position: absolute;
+			top: 0; left: 0; bottom: 0; right: 0;
+			background-color: rgba(0, 0, 0, .7);
+		}
+		#curtain .loader {
+			position: absolute;
+			display: inline-block;
+			transform: translate(-50%, -50%);
+			top: 50%; left: 50%;
+			font-size: 24px;
+			color: white;
+		}
+		#curtain .loader img {width: 128px; border-radius: 10px; margin-right: 1em;}
+	</style>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+	<script src="https://code.jquery.com/ui/1.13.2/jquery-ui.js"></script>
+	<script src="dolly.js"></script>
+	<!-- script src="/js/nimbus.support.js"></script -->
+	<script>
+		$(() => {
+			$('#commands').draggable();
+			$('#map-view').draggable();
+			const scale = (length) => {
+				const k = 0.155172413793103;
+				return Math.round(k*length);
+			};
+			const endpoint = 'https://prod-174.westus.logic.azure.com/workflows/10a7c13b8d0d45cd947b3df47d0f2b04/triggers/manual/paths/invoke?api-version=2016-06-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=9K7vR10ujdxThUfWJw7VW2zd2jGpPjO5Zul5jHov03Y';
+			const stands = (new dolly.Module('', endpoint))
+				//.parser(response => response.data.rows.filter(loc => loc.x !== null).map(loc => {loc.users = loc.users.join('<br>'); return loc;}))
+				.view('map', (new dolly.View('#map-view', 'desktop'))
+					.on('bind', (field, data, record) => {
+						switch (field) {
+						case 'style':
+							var s;
+							s = 'left: ' + scale(645 + record.X) + 'px'
+								+ '; top: ' + scale(445 + record.Y) + 'px'
+								+ '; width:' + scale(record.Ancho) + 'px'
+								+ '; height: ' + scale(record.Alto) + 'px'
+								+ '; transform: rotate(-' + record.Rotacion + 'deg) '
+								+ '; transform-origin: 100%'
+								+ '; font-size: ' + (x => (x < 10 ? 10 : (x > 24 ? 24 : x)))(scale(Math.min(record.Alto, record.Ancho))/3) + 'px';
+							switch (record.Forma) {
+							case 1:
+								s += '; border-top-right-radius: ' + scale(record.Parametro) + 'px'; break;
+							case 2:
+								s += '; border-top-left-radius: ' + scale(record.Parametro) + 'px'; break;
+							case 3:
+								s += '; border-bottom-left-radius: ' + scale(record.Parametro) + 'px'; break;
+							case 4:
+								s += '; border-bottom-right-radius: ' + scale(record.Parametro) + 'px'; break;
+							}
+							return s;
+						case 'info':
+							return (record.ClienteMarca || '(no reservado)') + '\n' + record.Superficie + ' m²'
+						case 'vertical':
+							return record.Alto >= record.Ancho;
+						case 'category':
+							return record.Categoria.replaceAll(' ', '-');
+						default:
+							return data;
+						}
+					})
+				)
+				.view('cmd', (new dolly.View('#commands', 'cmd'))
+					.handlers({
+						scale: (ev) => {
+							const s = $(ev.currentTarget).attr('scale');
+							//$('#main').width(3000*Math.sqrt(s/100)).height(2000*Math.sqrt(s/100));
+							$('#main').css('trasform-origin', ($('#main').width()/2) + 'px ' + ($('#main').height()/2) + 'px !important').attr('scale', s);
+						}
+					})
+				)
+				.on('endFetch', () => {
+					$('#curtain').fadeOut(500);
+				})
+			.fetch();
+		});		
+	</script>
+</head>
+<body>
+	<div id="main" class="main">
+		<div id="map-view">
+			<div dy-template="desktop" dy-clone="true" class="desktop" dy-bind="style:[[style]];reserved:?[[ClienteCUIT]];category:[[category]]">
+				<span class="machine" dy-bind="html:[[Codigo]];vertical:?[[vertical]];title:[[info]]"></span>
+			</div>
+		</div>
+	</div>
+	<div id="commands" class="commands" dy-template="cmd">
+		<div class="button" dy-events="click:scale" scale="150"><span>150%</span></div>
+		<div class="button" dy-events="click:scale" scale="100"><span>100%</span></div>
+		<div class="button" dy-events="click:scale" scale="75"><span>75%</span></div>
+		<div class="button" dy-events="click:scale" scale="50"><span>50%</span></div>
+	</div>
+	<div id="curtain">
+		<div class="loader"><img src="../images/pds-isotipo.png" />Cargando stands...</div>
+	</div>
+</body>
+</html>

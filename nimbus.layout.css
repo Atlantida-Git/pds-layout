@@ -1,0 +1,361 @@
+@charset "UTF-8";
+
+/*div[dy-role=fixed-header] > div 		{padding: 5px; font-weight: bold; color: #FFF; overflow: hidden; text-overflow: ellipsis; cursor: pointer;}	*/
+
+/* Layout base */
+.align-left 			{text-align: left;}
+.align-right			{text-align: right;}
+.align-center			{text-align: center;}
+
+.enter {
+	display: none;
+}
+
+.header {
+	border-radius: 2px;
+	padding: 10px; 
+	white-space: nowrap;
+	overflow: visible;
+	font-size: smaller;
+}
+
+.input[type=text]			{color: #FFF; height: inherit; font-size: 100%; padding: 0 0.5em;}
+
+/* Area tipo panel */
+.panel {
+	border-radius: 2px;
+	padding: 10px;
+	color: white;
+	-webkit-backdrop-filter: blur(10px);
+	backdrop-filter: blur(10px);
+	box-shadow: 0px 0px 5px rgba(255,255,255,.5);
+	background: rgba(255,255,255,0.3);
+	box-sizing: border-box;
+	transition: opacity 1s;
+	overflow-y: hidden;
+}
+.panel li 							{margin-left: 5px; list-style-type: none; margin-bottom: .2em; cursor: pointer;}
+.panel li:hover						{text-decoration: underline;}
+.panel li[current]					{list-style-type: disc; font-weight: bold; color: #FC0;}
+.panel .items-group-header			{padding: 2px 5px; margin-bottom: 3px; position: relative; overflow: hidden; text-overflow: ellipsis;}
+.panel .items-group-content			{margin-left: 10px; margin-bottom: 10px;}
+
+/* Area tipo panel con scroll vertical */
+.panel.scroll:hover					{overflow-y: auto;}
+
+/* Cinta de opciones */
+.ribbon {
+	position: relative; 
+	padding: 10px; 
+	z-index: 1; 
+	overflow-y: visible;
+}
+.ribbon ul							{overflow: hidden; white-space: nowrap; padding: 10px 0; box-sizing: border-box;}
+.ribbon ul:hover					{overflow-x: auto;}
+.ribbon ul li {
+	display: inline-block; padding: 2px; border: 1px solid transparent; 
+	cursor: pointer; margin: 0 2px; vertical-align: top; text-align: center;
+}
+.ribbon ul li:first-child			{border: 1px solid #999;}
+.ribbon ul li:hover					{border: 1px solid #FC0;}
+.ribbon ul li[selected]				{background-color: #FC0 !important;}
+.ribbon ul li div					{text-align: center; color: #FFF; font-size: 11px; font-weight: bold; white-space: normal;}
+.ribbon ul li[selected] div			{color: #000;}
+.ribbon ul li div:first-child		{position: relative; top: 50%; transform: translateY(-50%);}
+
+.ribbon input						{color: #FFF; height: inherit; font-size: 100%; padding: 0 0.5em;}
+
+/* Barra de acciones */
+.actions {
+	display: none; position: absolute; top: auto !important; bottom: 0; height: 40px; width: 100%;
+	background-color: #FC0; color: #000; padding: 10px; border-radius: 4px;
+}
+.actions * 							{vertical-align: middle; margin: 0 1em;}
+.actions *:before 					{content: ""; display: inline-block; vertical-align: middle;}
+.actions .action					{font-weight: bolder;}
+.actions .button 					{border-radius: 3px; background-color: #FFF; padding: 0 1em; cursor: pointer;}
+.actions .button:hover 				{box-shadow: 0 0 10px #666;}
+
+.main {
+	/*box-sizing: border-box;*/
+}
+
+.main-content {
+	position: absolute; 
+	top: 0; left: 0; right: 0; bottom: 0; 
+	/*padding: 20px;*/
+	transition: bottom 1s;
+}
+.main-content [dy-role=fixed-header]	{width: auto;}
+
+.view-header {padding: 1em;}
+.view-header img {height: 80px; width: auto; margin-right: 1em;}
+.view-header h1 {display: inline-block; color: #FFF; vertical-align: middle;}
+
+/* Contenedor scrollable */
+.scrollable 		{overflow-y: auto; overflow-x: hidden; height: 100%;}
+.scrollable-h 		{overflow-x: auto; overflow-y: hidden; height: 100%; white-space: nowrap;}
+
+.opaque				{background-color: rgba(0,0,0,.8); -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px);}
+.fullheight 		{height: 100%;}
+.fitcontainer		{position: absolute; top: 0; left: 0; right: 0; bottom: 0;}
+
+.toolbar							{height: 30px;}
+.toolbar > div						{display: inline-block; height: 100%;}
+.toolbar > div > * 					{display: inline-block; height: inherit; width: auto; vertical-align: middle; margin: 0 10px 0 0; color: white;}
+.toolbar > div > *:before			{content: ""; display: inline-block; vertical-align: middle; height: inherit; width:0}
+.toolbar > div img 					{height: inherit;}
+.toolbar > div.right				{float: right;}
+.toolbar input[type=text]			{width: 10em; padding: 0 0.5em; font-size: 100%;}
+.toolbar input[type=text]:invalid	{color: #888;}
+.toolbar div[dy-role=dropdown],
+.toolbar div[dy-role=select]		{width: 180px;}
+
+.table 								{border-collapse: collapse;}
+.table .select-column 				{width: 40px !important; text-align: center;}
+.table th 							{padding: 5px; text-align: left;}
+.table th:hover 					{text-decoration: underline; cursor: pointer;}
+
+.table tr:hover 					{background-color: rgba(128,128,128,.3);}
+.table tr[selected]					{background-color: #FC0; color: black;}
+.table td 							{padding: 4px 5px; font-size: 90%;}
+.table td:last-child				{padding-right: 10px;}
+.table td.bolder 					{font-weight: bolder;} 
+.table td.justify-left 				{text-align: left;}
+.table td.justify-right				{text-align: right;}
+.table td.justify-center			{text-align: center;}
+.table td[sorted] 					{background-color: rgba(128,0,0,.3);}
+.table tr[inactive] td 				{color: #999;}
+
+.table.fitted th,
+.table.fitted td					{white-space: nowrap;}
+.table.fitted th:last-child,
+.table.fitted td:last-child			{width: 100%;}
+
+.editor { 
+	display: none;
+	position: absolute;
+	top: 50%; left: 50%; transform: translate(-50%,-50%);
+	width: 50%; 
+	height: 50%;
+}
+.editor .icon 						{text-align: center;}
+.editor .icon img 					{height: 80px; width: auto; border-radius: 4px;}
+.editor table, .editor input		{width: 100%;}
+.editor table th 					{text-align: left;}
+.editor table td 					{height: 26px; padding: 3px;}
+.editor table td.nowrap 			{white-space: nowrap;}
+.editor table td.indented 			{padding-left: 3em;}
+.editor table td img 				{vertical-align: middle;}
+.editor table tr.taller td 			{height: 42px; padding: 3px;}
+.editor table .title 				{font-size: 14pt;}
+.editor table textarea 				{resize: none; width: 100%;}
+
+.editor table.inline,
+.editor table.inline td				{width: auto !important;}
+.editor table.inline input 			{width: 5em;}
+
+
+.editor .data 						{display: inline-block; width: calc(50% - 10px); height: 100%; vertical-align: top;}
+.editor[mini] .data					{width: 100%;}
+.editor .data table td:first-child	{width: 150px;}
+
+.editor .attr						{display: inline-block; width: 50%; height: 100%; vertical-align: top; float: right;}
+.editor[mini] .attr					{display: none;}
+
+.editor .tabs 						{height: 25px;}
+.editor .tabs .tab {
+	display: inline-table; border-radius: 3px 3px 0 0; 
+	height: 100%; padding: 0 1em; 
+	background-color: #444; 
+	cursor: pointer;
+	border-top: 1px solid transparent;
+}
+.editor .tabs .tab[selected] 		{background-color: #222; color: #FC0; border-top-color: #FC0;}
+.editor .tabs .tab span 			{display: table-cell; vertical-align: middle;}
+
+.editor .page {
+	padding: 10px;
+	background-color: #222;
+	height: calc(100% - 25px);
+}
+.editor .page > div 				{display: none;}
+.editor .page > div:first-child 	{display: block;}
+.editor .page table 				{/*font-size: smaller;*/}
+.editor .page table th 				{border-bottom: 1px solid #F00; padding: 5px 0;}
+
+.editor .page tbody:last-child tr td  {border-bottom: none;}
+.editor .page tbody tr[inactive] {color: #999;}
+
+.more {
+	background: rgba(255,255,255,0.3); 
+	box-shadow: 0px 0px 5px rgba(255,255,255,.5);
+	color: white;
+	display: none;
+	margin: 0 5px 0 0; text-align: center; 
+	padding: 5px;
+	position: relative;
+	-webkit-backdrop-filter: blur(10px);
+}
+.more[more] {display: block;}
+
+.command {cursor: pointer;}
+.command:hover {transform: scale(1.2,1.2);}
+
+.close-button {
+	position: absolute;
+	top: 0; right: 0; width: 40px; height: 40px;
+	background-color: #F00;
+	border-radius: 4px;
+	cursor: pointer;
+}
+.close-button:hover {transform: scale(1.2,1.2); box-shadow: 0 0 10px #FFF;}
+.close-button div {
+	position: absolute;
+	top: 50%; left: 50%; width: 90%; height: 4px;
+	background-color: white;
+}
+.close-button div:nth-of-type(1) {transform: translate(-50%,-50%) rotate(45deg);}
+.close-button div:nth-of-type(2) {transform: translate(-50%,-50%) rotate(-45deg);}
+
+.add-button {
+	position: relative; display: inline-block;
+	width: 26px; height: 26px; border-radius: 13px; 
+	background: linear-gradient(#6C6,#353);
+	cursor: pointer;
+}
+.add-button:hover {transform: scale(1.2,1.2); box-shadow: 0 0 10px #FFF;}
+.add-button > div {
+	position: absolute;
+	top: 50%; left: 50%; width: 60%; height: 4px;
+	background-color: #FC0;
+}
+.add-button > div:nth-of-type(1) {transform: translate(-50%,-50%);}
+.add-button > div:nth-of-type(2) {transform: translate(-50%,-50%) rotate(90deg);}
+
+.del-button {
+	position: relative; display: inline-block;
+	width: 26px; height: 26px; border-radius: 13px; 
+	background: linear-gradient(#F44,#800);
+	cursor: pointer;
+}
+.del-button:hover {transform: scale(1.2,1.2); box-shadow: 0 0 10px #FFF;}
+.del-button > div {
+	position: absolute;
+	top: 50%; left: 50%; width: 60%; height: 4px;
+	background-color: #FFF;
+}
+.del-button > div:nth-of-type(1) {transform: translate(-50%,-50%);}
+
+.remove-button {
+	position: relative;
+	display: inline-block;
+	width: 1em; height: 1em;
+	background-color: transparent;
+	cursor: pointer;
+}
+.remove-button:hover {transform: scale(1.2,1.2);}
+.remove-button div {
+	position: absolute;
+	top: 50%; left: 50%; width: 90%; height: 1px;
+	background-color: red;
+}
+.remove-button div:nth-of-type(1) {transform: translate(-50%,-50%) rotate(45deg);}
+.remove-button div:nth-of-type(2) {transform: translate(-50%,-50%) rotate(-45deg);}
+
+.user-command {
+	cursor: pointer;
+}
+.user-command:hover {
+	transform: scale(1.2,1.2);
+}
+
+#dim {
+	display: none;
+	position: absolute;
+	left: 0; right: 0; top: 0; bottom: 0;
+	background-color: rgba(0,0,0,.5);
+	z-index: 2;
+}
+
+#logo {
+	position: absolute;
+	top: 50%; left: 50%; transform: translate(-50%,-50%);
+	white-space: nowrap;
+}
+#logo img {width: 170px; height: 170px; vertical-align: middle;}
+#logo div {display: inline-block; color: white; font: 30px "montserrat-alt-light"; margin-left: 20px; text-shadow: 0 0 5px #000;}
+#logo div span {color: inherit;}
+
+#header {
+	position: absolute;
+	top: 20px; left: 20px; right: 20px; height: 50px;
+}
+/*#header > div 						{display: inline-block; height: 100%;}
+#header > div img 					{height: inherit;}
+#header > div > * 					{display: inline-block; height: inherit; width: auto; vertical-align: middle; margin: 0 10px 0 0; color: white;}
+#header > div > *:before			{content: ""; display: inline-block; vertical-align: middle; height: 100%;}*/
+
+#header #counter					{font-weight: bold;}
+#header .options 					{/*float: right; */display: none; height: 100%; margin-left: 1em;}
+#header .options.all				{display: inline-block !important;}
+
+#header .user-profile				{cursor: pointer;}
+#header .user-avatar				{display: inline-block; width: 30px; height: 30px; border-radius: 50%; overflow: hidden; vertical-align: middle;}
+#header .user-name					{display: inline-block; margin-left: .5em;}
+
+#header #pan-on,
+#header #pan-off					{cursor: pointer;}
+body[panorama=yes] #header #pan-on	{display: none;}
+body[panorama=no] #header #pan-off	{display: none;}
+
+#index {
+	position: absolute;
+	top: 90px; left: 20px; width: 250px; bottom: 20px;
+	padding: 10px;
+	color: white;
+	overflow-x: hidden;
+}
+#index:hover 						{overflow-y: auto;}
+body[panorama=yes] #index			{display: none !important;}
+
+#standby							{display: none; z-index: 2;}
+
+.dy-skin *[readonly]				{background-color: transparent !important;}
+
+[dy-role=no-result]					{color: #FFF; margin: 0 2em;}
+
+
+
+.display-desktop {}
+@media (max-width: 1650px) {
+	.display-desktop {display: none !important;}
+}
+
+
+
+.profile-user[dy-role=list-item]:before {
+	content: "";
+	height: 100%;
+	display: inline-block;
+	vertical-align: middle;
+}
+.profile-user[dy-role=list-item] > div:first-child {
+	width: 80px; height: 80px;
+	border-radius: 50%;
+	background-size: contain;
+	background-position: center;
+	display: inline-block;
+	vertical-align: middle;
+}
+.profile-user[dy-role=list-item] > div:nth-child(2) {
+	margin-left: 10px;
+	font-size: 160%;
+	font-weight: bold;
+	display: inline-block;
+	vertical-align: middle;
+	/*max-width: 8em;*/
+}
+.profile-user[dy-role=list-item] p {
+	white-space: nowrap;
+}
